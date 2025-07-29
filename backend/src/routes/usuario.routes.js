@@ -1,0 +1,29 @@
+const express = require('express');
+const router = express.Router();
+const { protegerRuta, autorizar } = require('../middlewares/auth.middleware');
+const {
+  obtenerMiPerfil,
+  actualizarMiPerfil,
+  actualizarContrasena,
+  obtenerUsuarios,
+  obtenerUsuario,
+  actualizarUsuario,
+  eliminarUsuario
+} = require('../controllers/usuario.controller');
+
+// Todas las rutas requieren autenticación
+router.use(protegerRuta);
+
+// Rutas para el perfil del usuario actual
+router.get('/perfil', obtenerMiPerfil);
+router.put('/perfil', actualizarMiPerfil);
+router.put('/actualizar-contrasena', actualizarContrasena);
+
+// Rutas para administradores y clientes (temporal para pruebas)
+router.use(autorizar(['admin', 'cliente']));
+router.get('/', obtenerUsuarios);
+router.get('/:id', obtenerUsuario);
+router.put('/:id', actualizarUsuario);
+router.delete('/:id', eliminarUsuario);
+
+module.exports = router;
